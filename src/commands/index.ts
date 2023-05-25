@@ -67,14 +67,11 @@ export async function createController(...args: Args) {
     Utils.createFolderIfNotExists(Const.CONTROLLERS_PATH);
 
     const result = await Utils.writeFile(filePath, fileContent);
+    const messages = Utils.getMessages("modelCreation", fileName);
 
-    const messages = Const.messages.controllerCreation;
-    const messageError = messages.fail;
-    const messageSuccess = messages.success.replace(/%name%/g, fileName);
+    if (!result.success) return log.error(messages.error, result.error);
 
-    if (!result.success) return log.error(messageError, result.error);
-
-    log.success(messageSuccess);
+    log.success(messages.success);
 
     execSync(`code ${filePath}`);
 
@@ -94,14 +91,11 @@ export async function createContext(...args: Args) {
     Utils.createFolderIfNotExists(Const.CONTEXTS_PATH);
 
     const result = await Utils.writeFile(filePath, fileContent);
+    const messages = Utils.getMessages("modelCreation", fileName);
 
-    const messages = Const.messages.contextCreation;
-    const messageError = messages.fail;
-    const messageSuccess = messages.success.replace(/%name%/g, fileName);
+    if (!result.success) return log.error(messages.error, result.error);
 
-    if (!result.success) return log.error(messageError, result.error);
-
-    log.success(messageSuccess);
+    log.success(messages.success);
 
     execSync(`code ${filePath}`);
 }
@@ -119,14 +113,30 @@ export async function createModel(...args: Args) {
     Utils.createFolderIfNotExists(Const.MODELS_PATH);
 
     const result = await Utils.writeFile(filePath, fileContent);
+    const messages = Utils.getMessages("modelCreation", fileName);
 
-    const messages = Const.messages.modelCreation;
-    const messageError = messages.fail;
-    const messageSuccess = messages.success.replace(/%name%/g, fileName);
+    if (!result.success) return log.error(messages.error, result.error);
 
-    if (!result.success) return log.error(messageError, result.error);
-
-    log.success(messageSuccess);
+    log.success(messages.success);
 
     execSync(`code ${filePath}`);
+}
+
+export async function updatePackage(...args: Args) {
+    try {
+        const content = await Utils.readFile("package.json");
+
+        const json = JSON.parse(content);
+        const version = Helpers.increaseVersion(json.version);
+
+        json.version = version;
+
+        await Utils.writeFile("package.json", JSON.stringify(json));
+
+        const messages = Utils.getMessages("packageUpdating", version);
+        log.success(messages.success);
+    } catch (error) {
+        const messages = Utils.getMessages("packageUpdating");
+        log.error(messages.error, error);
+    }
 }

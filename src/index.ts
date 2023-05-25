@@ -4,7 +4,7 @@ import { program } from "commander";
 import * as Command from "./commands";
 
 program
-    .version("1.0.5")
+    .version("1.0.9")
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
@@ -29,6 +29,11 @@ program
     .command("create:model <name>")
     .description("Cria um novo modelo")
     .action(Command.createModel);
+
+program
+    .command("update:package")
+    .description("Atualiza a versão do package.json")
+    .action(Command.updatePackage);
 
 program
     .command("about")

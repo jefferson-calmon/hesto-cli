@@ -65,6 +65,19 @@ export function updateControllerIndexFile() {
     fs.writeFileSync(path, content);
 }
 
+export function increaseVersion(version: string) {
+    return version
+        .split(".")
+        .map((value, index, array) => {
+            const isLast = index === array.length - 1;
+
+            if (!isLast) return value;
+
+            return String(Number(value) + 1);
+        })
+        .join(".");
+}
+
 // Utilities
 function generateControllerNameFromFileName(fileName: string) {
     return fileName

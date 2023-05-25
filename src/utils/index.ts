@@ -1,6 +1,8 @@
 import fs from "fs";
 import natural from "natural";
-import { CONTROLLERS_PATH } from "../constants";
+import chalk from "chalk";
+
+import { CONTROLLERS_PATH, messages } from "../constants";
 
 interface WriteFileResult {
     success: boolean;
@@ -32,12 +34,34 @@ export function getAllControllersFilenames() {
     return fileNames;
 }
 
+export function getMessages(id: keyof typeof messages, ...vars: string[]) {
+    const message = messages[id];
+
+    const success = message.success.replace(/%var1%/, chalk.bold(vars[0]));
+    const error = message.success.replace(/%var1%/, chalk.bold(vars[0]));
+
+    return {
+        success,
+        error,
+    };
+}
+
 export async function writeFile(path: string, content: string) {
     return new Promise<WriteFileResult>((resolve, reject) => {
         fs.writeFile(path, content, (err) => {
-            if (err) resolve({ success: false, error: err });
+            if (err) return resolve({ success: false, error: err });
 
             resolve({ success: true, error: null });
+        });
+    });
+}
+
+export async function readFile(path: string) {
+    return new Promise<string>((resolve, reject) => {
+        fs.readFile(path, "utf8", (err, data) => {
+            if (err) return reject(err);
+
+            resolve(data);
         });
     });
 }
