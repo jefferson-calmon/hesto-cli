@@ -1,0 +1,32 @@
+{
+    "name": "hesto-cli",
+    "description": "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência.",
+    "version": "1.0.2",
+    "main": "./lib/index.js",
+    "bin": {
+        "hesto": "./lib/index.js"
+    },
+    "scripts": {
+        "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+        "start:windows": "nodemon --watch 'src/**/*.ts' --exec \"npx ts-node\" src/index.ts",
+        "push": "npm run build && npm publish",
+        "build": "tsc -p .",
+        "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "chalk": "4.1.2",
+        "clear": "^0.1.0",
+        "commander": "^10.0.1",
+        "figlet": "^1.6.0",
+        "natural": "^6.3.0"
+    },
+    "devDependencies": {
+        "@types/clear": "^0.1.2",
+        "@types/figlet": "^1.5.6",
+        "@types/node": "^20.2.3",
+        "nodemon": "^2.0.22",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.0.4"
+    }
+}
