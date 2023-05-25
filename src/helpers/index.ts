@@ -2,6 +2,7 @@ import * as fs from "fs";
 
 import * as Content from "../contents";
 import * as Utils from "../utils";
+import * as Const from "../constants";
 
 interface CreateControllerContentProps {
     name: string;
@@ -39,11 +40,9 @@ export function createModelContent(props: CreateModelContentProps) {
     return Content.model.replace(/%name%/g, name);
 }
 
-export function updateControllerIndexFile(indexPath: string) {
-    const dirPath = indexPath.replace("/index.ts", "");
-    const fileNames = fs
-        .readdirSync(dirPath, "utf-8")
-        .filter((fileName) => fileName !== "index.ts");
+export function updateControllerIndexFile() {
+    const fileNames = Utils.getAllControllersFilenames();
+    const path = Const.CONTROLLERS_PATH + "/index.ts";
 
     const importStatements: string[] = [];
     const objectItems: string[] = [];
@@ -63,7 +62,7 @@ export function updateControllerIndexFile(indexPath: string) {
         .replace(/%imports%/g, importStatements.join("\n"))
         .replace(/%items%/g, objectItems.join("\n"));
 
-    fs.writeFileSync(indexPath, content);
+    fs.writeFileSync(path, content);
 }
 
 // Utilities

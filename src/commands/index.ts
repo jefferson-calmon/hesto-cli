@@ -63,7 +63,6 @@ export async function createController(...args: Args) {
 
     const fileName = `${Utils.capitalize(name)}Controller`;
     const filePath = `${Const.CONTROLLERS_PATH}/${fileName}.ts`;
-    const indexPath = `${Const.CONTROLLERS_PATH}/index.ts`;
 
     Utils.createFolderIfNotExists(Const.CONTROLLERS_PATH);
 
@@ -79,7 +78,7 @@ export async function createController(...args: Args) {
 
     execSync(`code ${filePath}`);
 
-    Helpers.updateControllerIndexFile(indexPath);
+    Helpers.updateControllerIndexFile();
 }
 
 export async function createContext(...args: Args) {

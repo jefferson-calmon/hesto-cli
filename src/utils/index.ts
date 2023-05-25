@@ -1,5 +1,6 @@
 import fs from "fs";
 import natural from "natural";
+import { CONTROLLERS_PATH } from "../constants";
 
 interface WriteFileResult {
     success: boolean;
@@ -18,6 +19,17 @@ export function capitalize(value: string) {
 
 export function createFolderIfNotExists(folderPath: string) {
     if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath);
+}
+
+export function getAllControllersFilenames() {
+    const excluded = ["BaseController.ts", "index.ts"];
+
+    const fileNames = fs
+        .readdirSync(CONTROLLERS_PATH, "utf-8")
+        .filter((fileName) => fileName.endsWith(".ts"))
+        .filter((fileName) => !excluded.includes(fileName));
+
+    return fileNames;
 }
 
 export async function writeFile(path: string, content: string) {

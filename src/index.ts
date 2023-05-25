@@ -1,9 +1,10 @@
+#!/usr/bin/env node
 import { program } from "commander";
 
 import * as Command from "./commands";
 
 program
-    .version("1.0.2")
+    .version("1.0.5")
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
