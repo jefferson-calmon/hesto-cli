@@ -147,34 +147,12 @@ export async function updatePackage(...args: Args) {
 }
 
 export async function gitCommit(...args: Args) {
-    const type = await select({
-        message: "Selecione o tipo do commit:",
-        choices: Object.values(Const.commitTypes),
-        pageSize: Object.values(Const.commitTypes).length,
-    });
+    const [options] = args;
 
-    const scope = await input({
-        message: "Qual é o escopo do commit (Apenas uma palavra)?",
-        validate: (value) => value.split(" ").length === 1,
-        transformer: (value) => value.toLowerCase(),
-    });
+    const template = options.template;
 
-    const description = await input({
-        message: "Qual é a descrição do commit?",
-        validate: (value) => value.length <= 72,
-        transformer: (value) => Utils.capitalize(value),
-    });
-
-    const icon = Const.commitIcons[type as keyof typeof Const.commitTypes];
-
-    const commands = [
-        "git add .",
-        `git commit -m "${icon} ${type}(${scope}): ${description}"`,
-        "git push",
-    ];
-    
-    const command = commands.join(" && ");
-    console.log('\n')
+    const command = await Helpers.getGitCommitCommand(template)    
+    console.log("\n");
 
     const result = execSync(command);
 
