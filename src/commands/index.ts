@@ -1,8 +1,6 @@
 import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
-import select from "@inquirer/select";
-import input from "@inquirer/input";
 import { execSync } from "child_process";
 
 import * as Helpers from "../helpers";
@@ -151,7 +149,7 @@ export async function gitCommit(...args: Args) {
 
     const template = options.template;
 
-    const command = await Helpers.getGitCommitCommand(template)    
+    const command = await Helpers.getGitCommitCommand(template);
     console.log("\n");
 
     const result = execSync(command);
@@ -159,4 +157,10 @@ export async function gitCommit(...args: Args) {
     console.log(result.toString());
 
     log.success(command, false);
+}
+
+export async function gitTemplate(...args: Args) {
+    const [command] = args;
+
+    if (command === "list") return Helpers.displayGitCommitTemplatesList();
 }

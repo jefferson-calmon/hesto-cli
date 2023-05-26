@@ -5,6 +5,7 @@ import * as Utils from "../utils";
 import * as Const from "../constants";
 import select from "@inquirer/select";
 import input from "@inquirer/input";
+import Table from "cli-table";
 
 interface CreateControllerContentProps {
     name: string;
@@ -113,6 +114,19 @@ export async function getGitCommitCommand(templateKey: Template) {
     return "";
 }
 
+export async function displayGitCommitTemplatesList() {
+    const table = new Table({
+        head: ["Nome", "Descrição"],
+        colAligns: ["left", "left"],
+    });
+
+    Object.values(Const.commitTemplates)
+        .map((template) => [template.name, template.description])
+        .map((row) => table.push(row));
+        
+    console.log(table.toString());
+}
+
 // Utilities
 function generateControllerNameFromFileName(fileName: string) {
     return fileName
@@ -174,6 +188,6 @@ function getGitCommands(i: string, t: string, s: string, d: string) {
     return commands;
 }
 
-async function buildInLineCommand(...commands: string[]) {
+function buildInLineCommand(...commands: string[]) {
     return commands.join(" && ");
 }
