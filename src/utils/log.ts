@@ -5,8 +5,9 @@ function logError(message: string, error?: any) {
     console.error(chalk.red(`✗ ${message}${error ? `: ${error}` : ""}`));
 }
 
-function logSuccess(message: string) {
-    console.log("\n");
+function logSuccess(message: string, breakLine = true) {
+    if (breakLine) console.log("\n");
+    
     console.log(chalk.green(`✓ ${message}`));
 }
 

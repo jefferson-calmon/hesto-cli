@@ -1,7 +1,9 @@
-import { execSync } from "child_process";
 import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
+import select from "@inquirer/select";
+import input from "@inquirer/input";
+import { execSync } from "child_process";
 
 import * as Helpers from "../helpers";
 import * as Utils from "../utils";
@@ -123,7 +125,7 @@ export async function createModel(...args: Args) {
 }
 
 export async function updatePackage(...args: Args) {
-    const [options] = args
+    const [options] = args;
 
     try {
         const content = await Utils.readFile("package.json");
@@ -142,4 +144,41 @@ export async function updatePackage(...args: Args) {
         const messages = Utils.getMessages("packageUpdating");
         log.error(messages.error, error);
     }
+}
+
+export async function gitCommit(...args: Args) {
+    const type = await select({
+        message: "Selecione o tipo do commit:",
+        choices: Object.values(Const.commitTypes),
+        pageSize: Object.values(Const.commitTypes).length,
+    });
+
+    const scope = await input({
+        message: "Qual é o escopo do commit (Apenas uma palavra)?",
+        validate: (value) => value.split(" ").length === 1,
+        transformer: (value) => value.toLowerCase(),
+    });
+
+    const description = await input({
+        message: "Qual é a descrição do commit?",
+        validate: (value) => value.length <= 72,
+        transformer: (value) => Utils.capitalize(value),
+    });
+
+    const icon = Const.commitIcons[type as keyof typeof Const.commitTypes];
+
+    const commands = [
+        "git add .",
+        `git commit -m "${icon} ${type}(${scope}): ${description}"`,
+        "git push",
+    ];
+    
+    const command = commands.join(" && ");
+    console.log('\n')
+
+    const result = execSync(command);
+
+    console.log(result.toString());
+
+    log.success(command, false);
 }
