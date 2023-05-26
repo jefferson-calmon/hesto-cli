@@ -4,7 +4,11 @@ import { program } from "commander";
 import * as Command from "./commands";
 
 program
+<<<<<<< HEAD
     .version("1.0.14", "-vV")
+=======
+    .version("1.0.13", "-vV")
+>>>>>>> 4e4cc8576eee6a2ec5d212d23a53458fad612841
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
