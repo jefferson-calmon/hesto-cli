@@ -17,6 +17,8 @@ interface CreateModelContentProps {
     name: string;
 }
 
+type Part = "major" | "minor" | "patch";
+
 export function createControllerContent(props: CreateControllerContentProps) {
     const { database, name } = props;
 
@@ -65,17 +67,14 @@ export function updateControllerIndexFile() {
     fs.writeFileSync(path, content);
 }
 
-export function increaseVersion(version: string) {
-    return version
-        .split(".")
-        .map((value, index, array) => {
-            const isLast = index === array.length - 1;
+export function increaseVersion(version: string, part: Part) {
+    let [major, minor, patch] = version.split(".").map(Number);
 
-            if (!isLast) return value;
+    if (part === 'major') major++
+    if (part === 'minor') minor++
+    if (part === 'patch') patch++
 
-            return String(Number(value) + 1);
-        })
-        .join(".");
+    return [major, minor, patch].join('.')
 }
 
 // Utilities

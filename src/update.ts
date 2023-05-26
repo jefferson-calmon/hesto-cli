@@ -6,14 +6,16 @@ async function main() {
     const indexContent = await Utils.readFile("src/index.ts");
 
     const json = JSON.parse(packageContent);
-    const version = Helpers.increaseVersion(json.version);
+    const version = Helpers.increaseVersion(json.version, "patch");
     json.version = version;
 
-    const index = indexContent.indexOf('.version("') + '.version("'.length;
+    const startIndex = indexContent.indexOf('.version("') + '.version("'.length;
+    const endIndex = indexContent.indexOf('", "-vV")');
+
     const newIndexContent =
-        indexContent.slice(0, index) +
+        indexContent.slice(0, startIndex) +
         version +
-        indexContent.slice(index + version.length);
+        indexContent.slice(endIndex);
 
     await Utils.writeFile("package.json", JSON.stringify(json));
     await Utils.writeFile("src/index.ts", newIndexContent);

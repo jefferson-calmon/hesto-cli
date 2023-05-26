@@ -123,17 +123,20 @@ export async function createModel(...args: Args) {
 }
 
 export async function updatePackage(...args: Args) {
+    const [options] = args
+
     try {
         const content = await Utils.readFile("package.json");
 
         const json = JSON.parse(content);
-        const version = Helpers.increaseVersion(json.version);
+        const version = Helpers.increaseVersion(json.version, options.part);
+        const versions = [json.version, version];
 
         json.version = version;
 
         await Utils.writeFile("package.json", JSON.stringify(json));
 
-        const messages = Utils.getMessages("packageUpdating", version);
+        const messages = Utils.getMessages("packageUpdating", ...versions);
         log.success(messages.success);
     } catch (error) {
         const messages = Utils.getMessages("packageUpdating");

@@ -37,8 +37,13 @@ export function getAllControllersFilenames() {
 export function getMessages(id: keyof typeof messages, ...vars: string[]) {
     const message = messages[id];
 
-    const success = message.success.replace(/%var1%/, chalk.bold(vars[0]));
-    const error = message.success.replace(/%var1%/, chalk.bold(vars[0]));
+    const success = message.success
+        .replace(/%var1%/, chalk.bold(vars[0]))
+        .replace(/%var2%/, chalk.bold(vars[1]));
+
+    const error = message.success
+        .replace(/%var1%/, chalk.bold(vars[0]))
+        .replace(/%var2%/, chalk.bold(vars[1]));
 
     return {
         success,

@@ -8,6 +8,9 @@ dist/
 build/
 out/
 lib/
+controllers/
+contexts/
+models/
 *.log.*
 
 # Dependendo do ambiente de desenvolvimento, você pode adicionar:

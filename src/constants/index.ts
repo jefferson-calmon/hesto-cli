@@ -16,7 +16,7 @@ export const messages = {
         fail: "Erro ao criar o arquivo do modelo",
     },
     packageUpdating: {
-        success: "Package.json atualizado para a versão %var1% com sucesso!",
+        success: "Package.json atualizado com sucesso: %var1% -> %var2%",
         fail: "Erro ao tentar atualizar a versão do package.json",
     },
 };
