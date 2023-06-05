@@ -1,6 +1,7 @@
 export const CONTROLLERS_PATH = "src/controllers";
 export const CONTEXTS_PATH = "src/contexts";
 export const MODELS_PATH = "src/models";
+export const COMPONENTS_PATH = "src/components";
 
 export const messages = {
     controllerCreation: {
@@ -13,6 +14,10 @@ export const messages = {
     },
     modelCreation: {
         success: "Modelo %var1% criado com sucesso!",
+        fail: "Erro ao criar o arquivo do modelo",
+    },
+    componentCreation: {
+        success: "Component %var1% criado com sucesso!",
         fail: "Erro ao criar o arquivo do modelo",
     },
     packageUpdating: {

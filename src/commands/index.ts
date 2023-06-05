@@ -122,6 +122,29 @@ export async function createModel(...args: Args) {
     execSync(`code ${filePath}`);
 }
 
+export async function createComponent(...args: Args) {
+    const name = Utils.capitalize(args[0]).replace(" ", "");
+
+    const { index, styles } = Helpers.createComponentContent({
+        name,
+    });
+
+    const indexFilePath = `${Const.COMPONENTS_PATH}/${name}/index.tsx`;
+    const stylesFilePath = `${Const.COMPONENTS_PATH}/${name}/styles.ts`;
+
+    Utils.createFolderIfNotExists(Const.COMPONENTS_PATH);
+    Utils.createFolderIfNotExists(`${Const.COMPONENTS_PATH}/${name}`);
+
+    await Utils.writeFile(indexFilePath, index);
+    await Utils.writeFile(stylesFilePath, styles);
+
+    const messages = Utils.getMessages("componentCreation", name);
+
+    log.success(messages.success);
+
+    execSync(`code ${indexFilePath}`);
+}
+
 export async function updatePackage(...args: Args) {
     const [options] = args;
 

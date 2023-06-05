@@ -20,6 +20,10 @@ interface CreateModelContentProps {
     name: string;
 }
 
+interface CreateComponentContentProps {
+    name: string;
+}
+
 type Part = "major" | "minor" | "patch";
 type Template = boolean | keyof typeof Const.commitTemplates | undefined;
 
@@ -44,6 +48,15 @@ export function createModelContent(props: CreateModelContentProps) {
     const { name } = props;
 
     return Content.model.replace(/%name%/g, name);
+}
+
+export function createComponentContent(props: CreateComponentContentProps) {
+    const { name } = props;
+
+    const index = Content.componentIndex.replace(/%name%/g, name);
+    const styles = Content.componentStyles.replace(/%name%/g, name);
+
+    return { index, styles };
 }
 
 export function updateControllerIndexFile() {
@@ -123,7 +136,7 @@ export async function displayGitCommitTemplatesList() {
     Object.values(Const.commitTemplates)
         .map((template) => [template.name, template.description])
         .map((row) => table.push(row));
-        
+
     console.log(table.toString());
 }
 
