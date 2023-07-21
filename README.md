@@ -8,8 +8,6 @@ A Hesto CLI foi inspirada em Hefesto, o artesão divino da mitologia grega. Hefe
 
 A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência.
 
-Assim como Hefesto moldava o metal com maestria, a Hesto CLI é projetada para ajudá-lo a moldar seu código com precisão e elegância. Aproveite o poder da Hesto CLI para impulsionar sua produtividade e alcançar resultados impressionantes.
-
 ## Instalação
 
 Para instalar a Hesto CLI, você precisa ter o Node.js e o npm (gerenciador de pacotes do Node.js) instalados em seu sistema. Em seguida, execute o seguinte comando no terminal:
