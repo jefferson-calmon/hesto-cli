@@ -18,6 +18,7 @@ interface CreateContextContentProps {
 
 interface CreateModelContentProps {
     name: string;
+    useZod?: boolean;
 }
 
 interface CreateComponentContentProps {
@@ -45,9 +46,11 @@ export function createContextContent(props: CreateContextContentProps) {
 }
 
 export function createModelContent(props: CreateModelContentProps) {
-    const { name } = props;
+    const { name, useZod } = props;
 
-    return Content.model.replace(/%name%/g, name);
+    const content = useZod ? Content.modelWithZod : Content.model;
+
+    return content.replace(/%name%/g, name);
 }
 
 export function createComponentContent(props: CreateComponentContentProps) {

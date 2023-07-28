@@ -101,10 +101,13 @@ export async function createContext(...args: Args) {
 }
 
 export async function createModel(...args: Args) {
-    const [name] = args;
+    const [name, options] = args;
+
+    const useZod = options.zod;
 
     const fileContent = Helpers.createModelContent({
         name: Utils.capitalize(name),
+        useZod
     });
 
     const fileName = `${Utils.capitalize(name)}`;

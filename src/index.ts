@@ -4,10 +4,15 @@ import { program } from "commander";
 import * as Command from "./commands";
 
 program
-    .version("1.0.17", "-vV")
+    .version("1.0.18", "-vV")
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
+
+program
+    .command("start:project <name>")
+    .description("Inicia um novo projeto na rota atual")
+    .action(Command.createController);
 
 program
     .command("create:controller <name>")
@@ -28,6 +33,7 @@ program
 program
     .command("create:model <name>")
     .description("Cria um novo modelo")
+    .option("--zod", "Usar a estrutura e sintaxe do zod")
     .action(Command.createModel);
 
 program
@@ -48,6 +54,7 @@ program
 program
     .command("git:commit")
     .description("Cria um novo commit")
+    .alias("gc")
     .option(
         "-t, --template [type]",
         "Define qual template será usado. Use `git:templates list` para ver os templates existentes"
