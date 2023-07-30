@@ -1,61 +1,20 @@
-import chalk from "chalk";
-import clear from "clear";
-import figlet from "figlet";
 import { execSync } from "child_process";
 
 import * as Helpers from "../helpers";
 import * as Utils from "../utils";
 import * as Const from "../constants";
-import { CommandStack } from "../types";
+import { CommandStack, ProjectType } from "../types";
 
 type Args = any[];
 
 const log = Utils.log;
 
 export async function about(...args: Args) {
-    clear();
-
-    console.log(
-        chalk.bold(
-            figlet.textSync("Hesto CLI", {
-                horizontalLayout: "default",
-            })
-        )
-    );
-
-    console.log(
-        chalk.bold(
-            "\n\nA Hesto CLI foi inspirada em Hefesto, o artesão divino da mitologia grega. Hefesto era conhecido por sua habilidade em forjar armas poderosas e belas obras de arte. Da mesma forma, a Hefesto CLI visa fornecer uma ferramenta poderosa e útil para desenvolvedores e criadores.\n"
-        )
-    );
-
-    console.log(
-        chalk.bold(
-            "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência.\n"
-        )
-    );
-
-    console.log(
-        chalk.bold(
-            "Assim como Hefesto moldava o metal com maestria, a Hesto CLI é projetada para ajudá-lo a moldar seu código com precisão e elegância. Aproveite o poder da Hesto CLI para impulsionar sua produtividade e alcançar resultados impressionantes.\n"
-        )
-    );
-
-    console.log(
-        chalk.bold(
-            "Que a Hesto CLI seja sua ferramenta de confiança na forja do desenvolvimento!\n\n"
-        )
-    );
-
-    console.log(
-        "                                                 Criado por Jefferson Calmon - github.com/jefferson-calmon"
-    );
-
-    console.log("\n\n");
+    return Helpers.displayAboutText();
 }
 
 export async function start(...args: Args) {
-    const [type, name] = args;
+    const [type, name] = args as [ProjectType, string, ...unknown[]];
 
     if (!["web", "app", "api", "webservice"].includes(type)) {
         return log.error(
@@ -69,13 +28,22 @@ export async function start(...args: Args) {
     const script = `run.${isWin ? "bat" : "sh"}`;
     const port = Math.floor(1000 + Math.random() * 9000);
 
-    const cloneRepo = `git clone https://github.com/jefferson-calmon/nextjs-starter ${slug}`;
+    const repositories: Record<ProjectType, string> = {
+        web: "https://github.com/jefferson-calmon/nextjs-starter",
+        app: "https://github.com/jefferson-calmon/nextjs-starter",
+        api: "https://github.com/jefferson-calmon/nextjs-starter",
+        webservice: "https://github.com/jefferson-calmon/nextjs-starter",
+    };
+
+    const repository = repositories[type];
+
+    const cloneRepository = `git clone ${repository} ${slug}`;
     const installDependencies = `cd ./${slug} && mkdir logs && yarn install > ./logs/yarn-install.log`;
     const createInitScript = `cd ./${slug} && echo yarn next dev --port ${port} >> ${script}`;
-    const init = `cd ./${slug} && code . && yarn dev`;
+    const init = `cd ./${slug} && code .`;
 
     const commandStack: CommandStack = {
-        [cloneRepo]: {
+        [cloneRepository]: {
             message: "Clonando repositório de base",
         },
         [installDependencies]: {
@@ -84,21 +52,27 @@ export async function start(...args: Args) {
         [createInitScript]: {
             message: "Preparando inicialização personalizada",
             callback: async () => {
-                const content = await Utils.readFile("package.json");
+                const content = await Utils.readFile(`./${slug}/package.json`);
                 const json = JSON.parse(content);
 
                 json.scripts.dev = `${script}`;
 
-                await Utils.writeFile("package.json", JSON.stringify(json));
+                await Utils.writeFile(
+                    `./${slug}/package.json`,
+                    JSON.stringify(json)
+                );
             },
         },
         [init]: {
-            message: "Iniciando o projeto",
+            message: "Abrindo o projeto",
         },
     };
 
-    console.log("\n");
+    console.log("");
     await Utils.executeCommandStack(commandStack);
+    console.log("");
+
+    execSync(`cd ./${slug} && yarn dev`);
 }
 
 export async function createController(...args: Args) {
@@ -115,15 +89,15 @@ export async function createController(...args: Args) {
     Utils.createFolderIfNotExists(Const.CONTROLLERS_PATH);
 
     const result = await Utils.writeFile(filePath, fileContent);
-    const messages = Utils.getMessages("modelCreation", fileName);
+    const messages = Utils.getMessages("controllerCreation", fileName);
 
     if (!result.success) return log.error(messages.error, result.error);
 
-    log.success(messages.success);
-
-    execSync(`code ${filePath}`);
-
     Helpers.updateControllerIndexFile();
+
+    await Utils.execute(`code ${filePath}`);
+
+    log.success(messages.success);
 }
 
 export async function createContext(...args: Args) {
@@ -145,7 +119,7 @@ export async function createContext(...args: Args) {
 
     log.success(messages.success);
 
-    execSync(`code ${filePath}`);
+    await Utils.execute(`code ${filePath}`);
 }
 
 export async function createModel(...args: Args) {
@@ -170,7 +144,7 @@ export async function createModel(...args: Args) {
 
     log.success(messages.success);
 
-    execSync(`code ${filePath}`);
+    Utils.execute(`code ${filePath}`);
 }
 
 export async function createComponent(...args: Args) {
@@ -193,7 +167,7 @@ export async function createComponent(...args: Args) {
 
     log.success(messages.success);
 
-    execSync(`code ${indexFilePath}`);
+    Utils.execute(`code ${indexFilePath}`);
 }
 
 export async function updatePackage(...args: Args) {
@@ -203,7 +177,7 @@ export async function updatePackage(...args: Args) {
         const content = await Utils.readFile("package.json");
 
         const json = JSON.parse(content);
-        const version = Helpers.increaseVersion(json.version, options.part);
+        const version = Helpers.updateVersion(json.version, options.part);
         const versions = [json.version, version];
 
         json.version = version;
@@ -223,12 +197,12 @@ export async function gitCommit(...args: Args) {
 
     const template = options.template;
 
-    const command = await Helpers.getGitCommitCommand(template);
-    console.log("\n");
+    const command = await Helpers.createGitCommitCommand(template);
 
-    const result = await Utils.execute(command);
-
-    console.log(result.toString());
+    if (options.execute) {
+        console.log("");
+        await Utils.execute(command).then(console.log);
+    }
 
     log.success(command, false);
 }
@@ -236,5 +210,5 @@ export async function gitCommit(...args: Args) {
 export async function gitTemplate(...args: Args) {
     const [command] = args;
 
-    if (command === "list") return Helpers.displayGitCommitTemplatesList();
+    if (command === "list") return Helpers.listGitTemplates();
 }

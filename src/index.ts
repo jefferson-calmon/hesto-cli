@@ -4,7 +4,7 @@ import { program } from "commander";
 import * as Command from "./commands";
 
 program
-    .version("1.0.26", "-vV")
+    .version("1.0.28", "-vV")
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
@@ -58,6 +58,10 @@ program
     .option(
         "-t, --template [type]",
         "Define qual template será usado. Use `git:templates list` para ver os templates existentes"
+    )
+    .option(
+        "-nE, --no-execute",
+        "Apenas exibe o comando montado, mas executa nada."
     )
     .action(Command.gitCommit);
 

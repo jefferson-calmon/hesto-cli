@@ -6,7 +6,7 @@ async function main() {
     const indexContent = await Utils.readFile("src/index.ts");
 
     const json = JSON.parse(packageContent);
-    const version = Helpers.increaseVersion(json.version, "patch");
+    const version = Helpers.updateVersion(json.version, "patch");
     json.version = version;
 
     const startIndex = indexContent.indexOf('.version("') + '.version("'.length;

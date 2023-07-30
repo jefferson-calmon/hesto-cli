@@ -4,14 +4,8 @@ import chalk from "chalk";
 import shell from "shelljs";
 import ora from "ora";
 
-import { CONTROLLERS_PATH, messages } from "../constants";
-import { CommandStack } from "../types";
-import { log } from "./log";
-
-interface WriteFileResult {
-    success: boolean;
-    error: any;
-}
+import { messages } from "../constants";
+import { CommandStack, WriteFileResult } from "../types";
 
 export function pluralize(value: string) {
     const nounInflector = new natural.NounInflector();
@@ -25,17 +19,6 @@ export function capitalize(value: string) {
 
 export function createFolderIfNotExists(folderPath: string) {
     if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath);
-}
-
-export function getAllControllersFilenames() {
-    const excluded = ["BaseController.ts", "index.ts"];
-
-    const fileNames = fs
-        .readdirSync(CONTROLLERS_PATH, "utf-8")
-        .filter((fileName) => fileName.endsWith(".ts"))
-        .filter((fileName) => !excluded.includes(fileName));
-
-    return fileNames;
 }
 
 export function getMessages(id: keyof typeof messages, ...vars: string[]) {
@@ -53,6 +36,10 @@ export function getMessages(id: keyof typeof messages, ...vars: string[]) {
         success,
         error,
     };
+}
+
+export function buildInLineCommand(...commands: string[]) {
+    return commands.join(" && ");
 }
 
 export async function writeFile(path: string, content: string) {
@@ -107,6 +94,7 @@ export async function executeCommandStack(commands: CommandStack) {
             if (callback) await callback();
         } catch (error: any) {
             spinner.fail();
+            console.log(error);
             throw new Error(error);
         }
     }
