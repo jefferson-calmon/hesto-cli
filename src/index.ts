@@ -4,15 +4,15 @@ import { program } from "commander";
 import * as Command from "./commands";
 
 program
-    .version("1.0.18", "-vV")
+    .version("1.0.26", "-vV")
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
 
 program
-    .command("start:project <name>")
+    .command("start <type> <name>")
     .description("Inicia um novo projeto na rota atual")
-    .action(Command.createController);
+    .action(Command.start);
 
 program
     .command("create:controller <name>")

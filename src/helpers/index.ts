@@ -198,7 +198,7 @@ function getGitCommands(i: string, t: string, s: string, d: string) {
     const commands = [
         "git add .",
         `git commit -m "${icon} ${type}(${scope}): ${description}"`,
-        "git push",
+        "git push -u origin main",
     ];
 
     return commands;

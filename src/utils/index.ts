@@ -1,8 +1,12 @@
 import fs from "fs";
 import natural from "natural";
 import chalk from "chalk";
+import shell from "shelljs";
+import ora from "ora";
 
 import { CONTROLLERS_PATH, messages } from "../constants";
+import { CommandStack } from "../types";
+import { log } from "./log";
 
 interface WriteFileResult {
     success: boolean;
@@ -69,6 +73,43 @@ export async function readFile(path: string) {
             resolve(data);
         });
     });
+}
+
+export async function execute(command: string) {
+    return new Promise<string>((resolve, reject) => {
+        shell.exec(
+            command,
+            { async: true, silent: true },
+            (code, stdout, stderr) => {
+                if (code !== 0) {
+                    reject(
+                        new Error(
+                            `Failed to execute command: ${command}\n\n${stderr}`
+                        )
+                    );
+                }
+                resolve(stdout);
+            }
+        );
+    });
+}
+
+export async function executeCommandStack(commands: CommandStack) {
+    const commandList = Object.keys(commands);
+
+    for (const command of commandList) {
+        const { message, callback } = commands[command];
+        const spinner = ora(message).start();
+
+        try {
+            await execute(command);
+            spinner.succeed();
+            if (callback) await callback();
+        } catch (error: any) {
+            spinner.fail();
+            throw new Error(error);
+        }
+    }
 }
 
 export { log } from "./log";

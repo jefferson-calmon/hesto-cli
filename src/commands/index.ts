@@ -6,6 +6,7 @@ import { execSync } from "child_process";
 import * as Helpers from "../helpers";
 import * as Utils from "../utils";
 import * as Const from "../constants";
+import { CommandStack } from "../types";
 
 type Args = any[];
 
@@ -51,6 +52,53 @@ export async function about(...args: Args) {
     );
 
     console.log("\n\n");
+}
+
+export async function start(...args: Args) {
+    const [type, name] = args;
+
+    if (!["web", "app", "api", "webservice"].includes(type)) {
+        return log.error(
+            "Tipo de projeto inválido. O tipo de projeto precisa ser um desses: web, app, api or webservice."
+        );
+    }
+
+    const slug = `${type}.${name}`.toLowerCase();
+
+    const isWin = process.platform === "win32";
+    const script = `run.${isWin ? "bat" : "sh"}`;
+    const port = Math.floor(1000 + Math.random() * 9000);
+
+    const cloneRepo = `git clone https://github.com/jefferson-calmon/nextjs-starter ${slug}`;
+    const installDependencies = `cd ./${slug} && mkdir logs && yarn install > ./logs/yarn-install.log`;
+    const createInitScript = `cd ./${slug} && echo yarn next dev --port ${port} >> ${script}`;
+    const init = `cd ./${slug} && code . && yarn dev`;
+
+    const commandStack: CommandStack = {
+        [cloneRepo]: {
+            message: "Clonando repositório de base",
+        },
+        [installDependencies]: {
+            message: "Instalando dependências",
+        },
+        [createInitScript]: {
+            message: "Preparando inicialização personalizada",
+            callback: async () => {
+                const content = await Utils.readFile("package.json");
+                const json = JSON.parse(content);
+
+                json.scripts.dev = `${script}`;
+
+                await Utils.writeFile("package.json", JSON.stringify(json));
+            },
+        },
+        [init]: {
+            message: "Iniciando o projeto",
+        },
+    };
+
+    console.log("\n");
+    await Utils.executeCommandStack(commandStack);
 }
 
 export async function createController(...args: Args) {
@@ -107,7 +155,7 @@ export async function createModel(...args: Args) {
 
     const fileContent = Helpers.createModelContent({
         name: Utils.capitalize(name),
-        useZod
+        useZod,
     });
 
     const fileName = `${Utils.capitalize(name)}`;
@@ -178,7 +226,7 @@ export async function gitCommit(...args: Args) {
     const command = await Helpers.getGitCommitCommand(template);
     console.log("\n");
 
-    const result = execSync(command);
+    const result = await Utils.execute(command);
 
     console.log(result.toString());
 
