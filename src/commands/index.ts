@@ -196,8 +196,11 @@ export async function gitCommit(...args: Args) {
     const [options] = args;
 
     const template = options.template;
+    const branch = options.branch;
 
-    const command = await Helpers.createGitCommitCommand(template);
+    const props = { template, branch };
+
+    const command = await Helpers.createGitCommitCommand(props);
 
     if (options.execute) {
         console.log("");
