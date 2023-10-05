@@ -170,6 +170,32 @@ export async function createComponent(...args: Args) {
     Utils.execute(`code ${indexFilePath}`);
 }
 
+export async function createEnv(...args: Args) {
+    const name = String(args[0]).split(" ");
+    const value = String(args[1] || "");
+    const type = String(args[2].type) as "public" | "private";
+
+    const envParts = ["NEXT", type.toUpperCase()];
+
+    envParts.push(...name);
+
+    const filePath = Const.CONSTANTS_PATH + "/env.ts";
+
+    const env = envParts.join("_").toUpperCase();
+    const envPath = ".env.local";
+    const envContent = `${env}="${value}"`;
+
+    Utils.createFileIfNotExists(filePath);
+    Utils.createFileIfNotExists(envPath);
+
+    await Helpers.updateDotEnvFile(envPath, envContent);
+    await Helpers.updateConstantEnvFile(filePath);
+
+    const messages = Utils.getMessages("envCreation", env);
+
+    log.success(messages.success);
+}
+
 export async function updatePackage(...args: Args) {
     const [options] = args;
 

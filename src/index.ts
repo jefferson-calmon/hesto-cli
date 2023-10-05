@@ -4,7 +4,7 @@ import { program } from "commander";
 import * as Command from "./commands";
 
 program
-    .version("1.0.30", "-vV")
+    .version("1.1.2", "-vV")
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
@@ -19,7 +19,7 @@ program
     .description("Cria um novo controller")
     .option(
         "-d, --database",
-        "Define o banco de dados que será usado (firestore ou rtdb). O padrão é firestore",
+        "Define o banco de dados que será usado (firestore | rtdb). O padrão é firestore",
         "firestore"
     )
     .action(Command.createController);
@@ -40,6 +40,16 @@ program
     .command("create:component <name>")
     .description("Cria um novo component")
     .action(Command.createComponent);
+
+program
+    .command("create:env <name> [value]")
+    .description("Cria uma variável de ambiente")
+    .option(
+        "-t, --type",
+        "Define qual o tipo da variável de ambiente. (public | 'private)",
+        "public"
+    )
+    .action(Command.createEnv);
 
 program
     .command("update:package")

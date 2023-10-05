@@ -21,16 +21,20 @@ export function createFolderIfNotExists(folderPath: string) {
     if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath);
 }
 
+export function createFileIfNotExists(filePath: string) {
+    if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, '');
+}
+
 export function getMessages(id: keyof typeof messages, ...vars: string[]) {
     const message = messages[id];
 
     const success = message.success
-        .replace(/%var1%/, chalk.bold(vars[0]))
-        .replace(/%var2%/, chalk.bold(vars[1]));
+        .replace(/%var1%/, chalk.cyan(vars[0]))
+        .replace(/%var2%/, chalk.cyan(vars[1]));
 
     const error = message.success
-        .replace(/%var1%/, chalk.bold(vars[0]))
-        .replace(/%var2%/, chalk.bold(vars[1]));
+        .replace(/%var1%/, chalk.cyan(vars[0]))
+        .replace(/%var2%/, chalk.cyan(vars[1]));
 
     return {
         success,

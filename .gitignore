@@ -32,7 +32,7 @@ models/
 *.ntvs*
 
 # Arquivos de configuração
-*.env
+*.env.local
 
 # Arquivos de credenciais sensíveis
 .env.local
