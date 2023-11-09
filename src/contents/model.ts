@@ -10,7 +10,10 @@ export interface %name% extends BaseModel {
 }
 
 export const initial%name%: %name% = {
+    id: String.uuid(),
 
+    createdAt: '',
+    updateAt: '',
 }
 
 export const validations: Validations<%name%> = {
@@ -33,7 +36,10 @@ export type %name% = z.infer<typeof %name%Schema>;
 export type %name%Mutation = WithoutBaseProps<z.infer<typeof %name%Schema>>;
 
 export const initial%name%: %name% = {
+    id: String.uuid(),
 
+    createdAt: '',
+    updateAt: '',
 }
 
 export const validations: Validations<%name%> = {
