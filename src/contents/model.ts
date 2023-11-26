@@ -13,7 +13,7 @@ export const initial%name%: %name% = {
     id: String.uuid(),
 
     createdAt: '',
-    updateAt: '',
+    updatedAt: '',
 }
 
 export const validations: Validations<%name%> = {

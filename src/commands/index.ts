@@ -181,7 +181,7 @@ export async function createEnv(...args: Args) {
 
     const filePath = Const.CONSTANTS_PATH + "/env.ts";
 
-    const env = envParts.join("_").toUpperCase();
+    const env = envParts.flat().join("_").toUpperCase();
     const envPath = ".env.local";
     const envContent = `${env}="${value}"`;
 

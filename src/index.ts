@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { program } from "commander";
+import { Option, program } from "commander";
 
 import * as Command from "./commands";
 
 program
-    .version("1.1.4", "-vV")
+    .version("1.1.5", "-vV")
     .description(
         "A Hesto CLI permite que você agilize suas tarefas de desenvolvimento e automatize processos repetitivos. Com uma série de comandos e recursos, você pode criar projetos, gerenciar dependências, executar tarefas de build e muito mais, tudo com facilidade e eficiência."
     );
@@ -17,10 +17,13 @@ program
 program
     .command("create:controller <name>")
     .description("Cria um novo controller")
-    .option(
-        "-d, --database",
-        "Define o banco de dados que será usado (firestore | rtdb). O padrão é firestore",
-        "firestore"
+    .addOption(
+        new Option(
+            "-d, --database <database>",
+            "Define o banco de dados que será usado"
+        )
+            .choices(["firestore", "rtdb"])
+            .default("rtdb")
     )
     .action(Command.createController);
 
@@ -44,10 +47,13 @@ program
 program
     .command("create:env <name> [value]")
     .description("Cria uma variável de ambiente")
-    .option(
-        "-t, --type",
-        "Define qual o tipo da variável de ambiente. (public | 'private)",
-        "public"
+    .addOption(
+        new Option(
+            "-t, --type <type>",
+            "Define qual o tipo da variável de ambiente"
+        )
+            .choices(["public", "private"])
+            .default("public")
     )
     .action(Command.createEnv);
 

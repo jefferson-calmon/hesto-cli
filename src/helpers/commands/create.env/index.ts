@@ -20,13 +20,12 @@ export async function updateConstantEnvFile(fileFullPath: string) {
     vars.forEach((envVar) => {
         const envName = envVar.split("=")[0];
         const propName = envName
-            .replace("NEXT", "")
             .replace("NEXT_PUBLIC_", "")
             .replace("NEXT_PRIVATE_", "")
+            .replace("NEXT_", "")
             .split("_")
-            .map((part) => part.toLowerCase())
-            .map(Utils.capitalize)
-            .join("");
+            .filter(Boolean)
+            .join("_");
 
         const objectItem = `    ${propName}: process.env.${envName},`;
 
